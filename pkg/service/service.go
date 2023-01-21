@@ -7,6 +7,7 @@ import (
 
 type Authorization interface {
 	CreateUser(user models.User) (int, error)
+	GenerateToken(username, password string) (string, error)
 }
 
 type AuthorItem interface {
@@ -23,6 +24,6 @@ type Service struct {
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Authorization: NewAuthService(repos),
+		Authorization: NewAuthService(repos.Authorization),
 	}
 }
