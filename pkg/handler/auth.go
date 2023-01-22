@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/shamank/booksAPI/models"
 	"net/http"
@@ -41,8 +40,6 @@ func (h *Handler) signIn(c *gin.Context) {
 	}
 
 	token, err := h.services.Authorization.GenerateToken(input.Username, input.Password)
-
-	fmt.Println(token, err)
 
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())

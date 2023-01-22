@@ -2,6 +2,7 @@ package service
 
 import (
 	"crypto/sha1"
+	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/shamank/booksAPI/models"
@@ -64,4 +65,22 @@ func hashPassword(pass string) string {
 	hash.Write([]byte(pass))
 
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+}
+
+func (s *AuthService) ParseToken(accessToken string) (int, error) {
+
+	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(jwtSigningKey), nil
+	})
+	if err != nil {
+		return 0, nil
+	}
+
+	claims, ok := token.Claims.(*tokenClaims)
+
+	if !ok {
+		return 0, errors.New("token claims are not of type *tokenClaims")
+	}
+
+	return claims.UserID, nil
 }

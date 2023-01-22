@@ -1,23 +1,30 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
-func (h *Handler) getAllBooks(ctx *gin.Context) {
+func (h *Handler) getAllBooks(c *gin.Context) {
+	id, _ := c.Get(userCtx)
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		userCtx: id,
+	})
+}
+
+func (h *Handler) addBook(c *gin.Context) {
 
 }
 
-func (h *Handler) addBook(ctx *gin.Context) {
+func (h *Handler) getBook(c *gin.Context) {
 
 }
 
-func (h *Handler) getBook(ctx *gin.Context) {
+func (h *Handler) updateBook(c *gin.Context) {
 
 }
 
-func (h *Handler) updateBook(ctx *gin.Context) {
-
-}
-
-func (h *Handler) deleteBook(ctx *gin.Context) {
+func (h *Handler) deleteBook(c *gin.Context) {
 
 }
