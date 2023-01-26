@@ -14,6 +14,10 @@ type AuthorItem interface {
 }
 
 type BookItem interface {
+	GetAllBooks() ([]models.Book, error)
+	GetBook(bookID int) (models.Book, error)
+
+	CreateBook(book models.Book) (int, error)
 }
 
 type Repository struct {
@@ -25,5 +29,6 @@ type Repository struct {
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
+		BookItem:      NewBookPostgres(db),
 	}
 }

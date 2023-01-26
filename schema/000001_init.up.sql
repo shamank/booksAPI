@@ -1,9 +1,17 @@
+CREATE TABLE usr_roles
+(
+    id          serial primary key,
+    title       varchar(255) not null,
+    description varchar(255)
+);
+
 CREATE TABLE users
 (
     id            serial primary key,
     name          varchar(255)        not null,
     username      varchar(255) unique not null,
-    password_hash varchar(255)        not null
+    password_hash varchar(255)        not null,
+    role_id       int references usr_roles (id) on delete cascade default 0
 );
 
 CREATE TABLE books
@@ -44,3 +52,9 @@ CREATE TABLE user_author
     user_id   int references users (id) on delete cascade   not null,
     author_id int references authors (id) on delete cascade not null
 );
+
+INSERT INTO usr_roles
+VALUES
+    (0, 'default_user', 'Обычный пользователь сервиса'),
+    (1, 'moderator', 'Модератор сервиса'),
+    (2, 'admin', 'Администратор сервиса')

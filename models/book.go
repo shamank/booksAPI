@@ -2,9 +2,9 @@ package models
 
 type Book struct {
 	ID          int     `json:"id"`
-	Title       string  `json:"title"`
-	Description string  `json:"description"`
-	Rating      float32 `json:"rating"`
+	Title       string  `json:"title" binding:"required"`
+	Description string  `json:"description" binding:"required"`
+	Rating      float32 `json:"rating" default:"0"`
 }
 
 type Author struct {

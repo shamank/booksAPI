@@ -20,6 +20,7 @@ const (
 type tokenClaims struct {
 	jwt.RegisteredClaims
 	UserID int `json:"user_id"`
+	RoleID int `json:"role_id"`
 }
 
 type AuthService struct {
@@ -37,7 +38,7 @@ func (s *AuthService) CreateUser(user models.User) (int, error) {
 
 func (s *AuthService) GenerateToken(username, password string) (string, error) {
 
-	user, err := s.repo.GetUser(username, password)
+	user, err := s.repo.GetUser(username, hashPassword(password))
 
 	if err != nil {
 		return "", err
@@ -49,6 +50,7 @@ func (s *AuthService) GenerateToken(username, password string) (string, error) {
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 		user.ID,
+		user.RoleID,
 	})
 
 	tokenString, err := token.SignedString([]byte(jwtSigningKey))
@@ -67,20 +69,20 @@ func hashPassword(pass string) string {
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }
 
-func (s *AuthService) ParseToken(accessToken string) (int, error) {
+func (s *AuthService) ParseToken(accessToken string) (int, int, error) {
 
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(jwtSigningKey), nil
 	})
 	if err != nil {
-		return 0, nil
+		return 0, 0, nil
 	}
 
 	claims, ok := token.Claims.(*tokenClaims)
 
 	if !ok {
-		return 0, errors.New("token claims are not of type *tokenClaims")
+		return 0, 0, errors.New("token claims are not of type *tokenClaims")
 	}
 
-	return claims.UserID, nil
+	return claims.UserID, claims.RoleID, nil
 }

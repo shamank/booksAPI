@@ -29,7 +29,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		books := api.Group("/books")
 		{
 			books.GET("/", h.getAllBooks)
-			books.POST("/", h.addBook)
+			books.POST("/", h.createBook)
 			books.GET("/:id", h.getBook)
 			books.PUT("/:id", h.updateBook)
 			books.DELETE("/:id", h.deleteBook)
