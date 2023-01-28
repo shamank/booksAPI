@@ -18,8 +18,7 @@ CREATE TABLE books
 (
     id          serial primary key,
     title       varchar(255) not null,
-    description varchar(255),
-    rating      float        not null default 0
+    description text
 );
 
 CREATE TABLE authors
@@ -42,7 +41,7 @@ CREATE TABLE user_book
     id          serial primary key,
     user_id     int references users (id) on delete cascade not null,
     book_id     int references books (id) on delete cascade not null,
-    user_rating int,
+    user_rating float,
     is_favorite bool
 );
 
@@ -54,7 +53,6 @@ CREATE TABLE user_author
 );
 
 INSERT INTO usr_roles
-VALUES
-    (0, 'default_user', 'Обычный пользователь сервиса'),
-    (1, 'moderator', 'Модератор сервиса'),
-    (2, 'admin', 'Администратор сервиса')
+VALUES (0, 'default_user', 'Обычный пользователь сервиса'),
+       (1, 'moderator', 'Модератор сервиса'),
+       (2, 'admin', 'Администратор сервиса')

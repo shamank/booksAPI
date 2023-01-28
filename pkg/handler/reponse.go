@@ -2,8 +2,17 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/shamank/booksAPI/models"
 	"github.com/sirupsen/logrus"
 )
+
+type getAllBooksResponse struct {
+	Data []models.Book `json:"data"`
+}
+
+type statusResponse struct {
+	Status string `json:"status"`
+}
 
 type errorResponse struct {
 	Message string `json:"message"`

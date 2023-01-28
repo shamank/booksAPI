@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/shamank/booksAPI/models"
+	"strings"
 )
 
 type BookPostgres struct {
@@ -20,7 +21,7 @@ func (r *BookPostgres) GetAllBooks() ([]models.Book, error) {
 
 	query := fmt.Sprintf("SELECT * FROM %s", booksTable)
 
-	if err := r.db.Get(&books, query); err != nil {
+	if err := r.db.Select(&books, query); err != nil {
 		return books, err
 	}
 
@@ -30,18 +31,12 @@ func (r *BookPostgres) GetAllBooks() ([]models.Book, error) {
 func (r *BookPostgres) GetBook(bookID int) (models.Book, error) {
 	var book models.Book
 
-	query := fmt.Sprintf("SELECT * FROM %s WHERE id = $1", booksTable)
+	query := fmt.Sprintf(`SELECT *, ((SELECT AVG(user_rating)
+               from user_book WHERE book_id = $1 GROUP BY book_id)) as rating 
+				FROM %s WHERE id = $1`, booksTable)
 	if err := r.db.Get(&book, query, bookID); err != nil {
 		return book, err
 	}
-
-	//result, err := r.db.QueryRow(query, bookID)
-	//if err != nil {
-	//	return book, err
-	//}
-	//if err := result.Scan(&book); err != nil {
-	//	return book, err
-	//}
 
 	return book, nil
 
@@ -56,12 +51,50 @@ func (r *BookPostgres) CreateBook(book models.Book) (int, error) {
 
 	var id int
 
-	createBookQuery := fmt.Sprintf("INSERT INTO %s(title, description, rating) VALUES($1, $2, $3) RETURNING id", booksTable)
-	row := tx.QueryRow(createBookQuery, book.Title, book.Description, book.Rating)
+	createBookQuery := fmt.Sprintf("INSERT INTO %s(title, description) VALUES($1, $2) RETURNING id", booksTable)
+	row := tx.QueryRow(createBookQuery, book.Title, book.Description)
 	if err := row.Scan(&id); err != nil {
 		tx.Rollback()
 		return 0, err
 	}
 
 	return id, tx.Commit()
+}
+
+func (r *BookPostgres) DeleteBook(bookID int) error {
+
+	query := fmt.Sprintf("DELETE FROM %s WHERE id = $1", booksTable)
+
+	_, err := r.db.Exec(query, bookID)
+	return err
+
+}
+
+func (r *BookPostgres) UpdateBook(bookID int, input models.UpdateBookInput) error {
+
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	if input.Title != nil {
+		setValues = append(setValues, fmt.Sprintf("title=$%d", argId))
+		args = append(args, *input.Title)
+		argId++
+	}
+
+	if input.Description != nil {
+		setValues = append(setValues, fmt.Sprintf("description=$%d", argId))
+		args = append(args, *input.Description)
+		argId++
+	}
+
+	setQuery := strings.Join(setValues, ", ")
+
+	query := fmt.Sprintf("UPDATE %s SET %s WHERE id = $%d",
+		booksTable, setQuery, argId)
+	args = append(args, bookID)
+
+	_, err := r.db.Exec(query, args...)
+	return err
+
 }

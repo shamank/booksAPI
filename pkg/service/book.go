@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/shamank/booksAPI/models"
 	"github.com/shamank/booksAPI/pkg/repository"
 )
@@ -17,12 +18,12 @@ func NewBookService(repo repository.BookItem) *BookService {
 //	GetBook(bookID int) (models.Book, error)
 
 func (s *BookService) GetAllBooks() ([]models.Book, error) {
-	return nil, nil
+	return s.repo.GetAllBooks()
 }
 
 func (s *BookService) GetBook(bookID int) (models.Book, error) {
-	var book models.Book
-	return book, nil
+
+	return s.repo.GetBook(bookID)
 }
 
 func (s *BookService) CreateBook(book models.Book) (int, error) {
@@ -32,4 +33,16 @@ func (s *BookService) CreateBook(book models.Book) (int, error) {
 	}
 
 	return bookID, nil
+}
+
+func (s *BookService) DeleteBook(bookID int) error {
+	return s.repo.DeleteBook(bookID)
+}
+
+func (s *BookService) UpdateBook(bookID int, input models.UpdateBookInput) error {
+	if ok := input.Validate(); !ok {
+		return errors.New("no changes")
+	}
+
+	return s.repo.UpdateBook(bookID, input)
 }

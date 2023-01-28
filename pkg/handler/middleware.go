@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
@@ -12,9 +11,13 @@ const (
 	authorizationHeader = "Authorization"
 	userIdCtx           = "userId"
 	userRoleCtx         = "userRoleId"
+
+	roleIDUser      = 0
+	roleIDModerator = 1
+	roleIDAdmin     = 2
 )
 
-func (h Handler) userIdentity(c *gin.Context) {
+func (h *Handler) userIdentity(c *gin.Context) {
 	header := c.GetHeader(authorizationHeader)
 
 	if header == "" {
@@ -23,7 +26,6 @@ func (h Handler) userIdentity(c *gin.Context) {
 	}
 
 	headerParts := strings.Split(header, " ")
-	fmt.Println(headerParts)
 	if len(headerParts) != 2 {
 		newErrorResponse(c, http.StatusUnauthorized, "invalid auth header")
 		return
@@ -37,6 +39,19 @@ func (h Handler) userIdentity(c *gin.Context) {
 
 	c.Set(userIdCtx, userId)
 	c.Set(userRoleCtx, userRoleId)
+}
+
+func (h *Handler) checkOnModerator(c *gin.Context) {
+	_, roleID, err := getUser(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if roleID == roleIDUser {
+		newErrorResponse(c, http.StatusForbidden, "you are not moderator/admin")
+		return
+	}
+
 }
 
 func getUser(c *gin.Context) (int, int, error) {

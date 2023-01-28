@@ -19,6 +19,8 @@ type BookItem interface {
 	GetBook(bookID int) (models.Book, error)
 
 	CreateBook(book models.Book) (int, error)
+	DeleteBook(bookID int) error
+	UpdateBook(bookID int, input models.UpdateBookInput) error
 }
 
 type Service struct {

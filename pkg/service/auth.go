@@ -55,7 +55,6 @@ func (s *AuthService) GenerateToken(username, password string) (string, error) {
 
 	tokenString, err := token.SignedString([]byte(jwtSigningKey))
 	if err != nil {
-		fmt.Println(tokenString, err)
 		return "", err
 	}
 
