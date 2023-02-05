@@ -14,13 +14,6 @@ CREATE TABLE users
     role_id       int references usr_roles (id) on delete cascade default 0
 );
 
-CREATE TABLE books
-(
-    id          serial primary key,
-    title       varchar(255) not null,
-    description text
-);
-
 CREATE TABLE authors
 (
     id         serial primary key,
@@ -29,10 +22,11 @@ CREATE TABLE authors
     birth      date         not null default CURRENT_DATE
 );
 
-CREATE TABLE book_author
+CREATE TABLE books
 (
-    id        serial primary key,
-    book_id   int references books (id) on delete cascade   not null,
+    id          serial primary key,
+    title       varchar(255) not null,
+    description text,
     author_id int references authors (id) on delete cascade not null
 );
 

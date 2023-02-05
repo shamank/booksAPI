@@ -10,6 +10,10 @@ type getAllBooksResponse struct {
 	Data []models.Book `json:"data"`
 }
 
+type getAllAuthorsResponse struct {
+	Data []models.Author `json:"data"`
+}
+
 type statusResponse struct {
 	Status string `json:"status"`
 }

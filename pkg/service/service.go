@@ -12,6 +12,12 @@ type Authorization interface {
 }
 
 type AuthorItem interface {
+	GetAllAuthors() ([]models.Author, error)
+	GetAuthor(authorID int) (models.Author, error)
+
+	CreateAuthor(author models.Author) (int, error)
+	DeleteAuthor(authorID int) error
+	UpdateAuthor(authorID int, input models.UpdateAuthorInput) error
 }
 
 type BookItem interface {
@@ -33,5 +39,6 @@ func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
 		BookItem:      NewBookService(repos.BookItem),
+		AuthorItem:    NewAuthorService(repos.AuthorItem),
 	}
 }

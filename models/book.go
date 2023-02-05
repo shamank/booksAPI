@@ -5,6 +5,7 @@ type Book struct {
 	Title       string   `json:"title" binding:"required"`
 	Description string   `json:"description" binding:"required"`
 	Rating      *float32 `json:"user_rating"`
+	Author      Author   `json:"author"`
 }
 
 type Author struct {
@@ -26,4 +27,13 @@ type UpdateBookInput struct {
 
 func (i *UpdateBookInput) Validate() bool {
 	return i.Title != nil || i.Description != nil
+}
+
+type UpdateAuthorInput struct {
+	FirstName *string `json:"first_name"`
+	LastName  *string `json:"last_name"`
+}
+
+func (i *UpdateAuthorInput) Validate() bool {
+	return i.FirstName != nil || i.LastName != nil
 }

@@ -11,6 +11,12 @@ type Authorization interface {
 }
 
 type AuthorItem interface {
+	GetAllAuthors() ([]models.Author, error)
+	GetAuthor(authorID int) (models.Author, error)
+
+	CreateAuthor(author models.Author) (int, error)
+	DeleteAuthor(authorID int) error
+	UpdateAuthor(authorID int, input models.UpdateAuthorInput) error
 }
 
 type BookItem interface {
