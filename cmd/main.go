@@ -6,6 +6,7 @@ import (
 	"github.com/shamank/booksAPI"
 	"github.com/shamank/booksAPI/pkg/handler"
 	"github.com/shamank/booksAPI/pkg/repository"
+	"github.com/shamank/booksAPI/pkg/repository/postgres"
 	"github.com/shamank/booksAPI/pkg/service"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -21,7 +22,7 @@ func main() {
 		logrus.Fatalf("error occured  while loading env: %s", err.Error())
 	}
 
-	db, err := repository.NewPostgresDB(repository.ConfigDB{
+	db, err := postgres.NewPostgresDB(postgres.ConfigDB{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
 		User:     viper.GetString("db.user"),

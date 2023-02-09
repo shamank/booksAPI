@@ -23,10 +23,11 @@ type BookAuthor struct {
 type UpdateBookInput struct {
 	Title       *string `json:"title"`
 	Description *string `json:"description"`
+	AuthorID    *int    `json:"author_id"`
 }
 
 func (i *UpdateBookInput) Validate() bool {
-	return i.Title != nil || i.Description != nil
+	return i.Title != nil || i.Description != nil || i.AuthorID != nil
 }
 
 type UpdateAuthorInput struct {

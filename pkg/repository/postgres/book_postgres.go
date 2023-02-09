@@ -1,4 +1,4 @@
-package repository
+package postgres
 
 import (
 	"fmt"
@@ -51,8 +51,8 @@ func (r *BookPostgres) CreateBook(book models.Book) (int, error) {
 
 	var id int
 
-	createBookQuery := fmt.Sprintf("INSERT INTO %s(title, description) VALUES($1, $2) RETURNING id", booksTable)
-	row := tx.QueryRow(createBookQuery, book.Title, book.Description)
+	createBookQuery := fmt.Sprintf("INSERT INTO %s(title, description, author_id) VALUES($1, $2, $3) RETURNING id", booksTable)
+	row := tx.QueryRow(createBookQuery, book.Title, book.Description, book.Author.ID)
 	if err := row.Scan(&id); err != nil {
 		tx.Rollback()
 		return 0, err
@@ -86,6 +86,11 @@ func (r *BookPostgres) UpdateBook(bookID int, input models.UpdateBookInput) erro
 		setValues = append(setValues, fmt.Sprintf("description=$%d", argId))
 		args = append(args, *input.Description)
 		argId++
+	}
+
+	if input.AuthorID != nil {
+		setValues = append(setValues, fmt.Sprintf("author_id=$%d", argId))
+		args = append(args, *input.AuthorID)
 	}
 
 	setQuery := strings.Join(setValues, ", ")

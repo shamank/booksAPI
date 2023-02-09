@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/shamank/booksAPI/models"
+	"github.com/shamank/booksAPI/pkg/repository/postgres"
 )
 
 type Authorization interface {
@@ -28,15 +29,27 @@ type BookItem interface {
 	UpdateBook(bookID int, input models.UpdateBookInput) error
 }
 
+type UserItem interface {
+	GetUserById(userID int) (models.User, error)
+	GetUsersBook(userID int) ([]models.Book, error)
+	GetUserAuthors(userID int) ([]models.Author, error)
+	NewUserBook(userID int, bookID int) error
+	NewUserAuthor(userID int, authorID int) error
+	UpdateUser(userID int) error
+}
+
 type Repository struct {
 	Authorization
 	AuthorItem
 	BookItem
+	UserItem
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		Authorization: NewAuthPostgres(db),
-		BookItem:      NewBookPostgres(db),
+		Authorization: postgres.NewAuthPostgres(db),
+		BookItem:      postgres.NewBookPostgres(db),
+		AuthorItem:    postgres.NewAuthorPostgres(db),
+		UserItem:      postgres.NewUserPostgres(db),
 	}
 }

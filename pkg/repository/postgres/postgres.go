@@ -1,4 +1,4 @@
-package repository
+package postgres
 
 import (
 	"fmt"
@@ -14,6 +14,7 @@ const (
 	userBookTable   = "user_book"
 
 	bookAuthor = "book_author"
+	rolesTable = "usr_roles"
 )
 
 type ConfigDB struct {

@@ -29,10 +29,20 @@ type BookItem interface {
 	UpdateBook(bookID int, input models.UpdateBookInput) error
 }
 
+type UserItem interface {
+	GetUserById(userID int) (models.User, error)
+	GetUsersBook(userID int) ([]models.Book, error)
+	GetUserAuthors(userID int) ([]models.Author, error)
+	NewUserBook(userID int, bookID int) error
+	NewUserAuthor(userID int, authorID int) error
+	UpdateUser(userID int) error
+}
+
 type Service struct {
 	Authorization
 	AuthorItem
 	BookItem
+	UserItem
 }
 
 func NewService(repos *repository.Repository) *Service {
@@ -40,5 +50,6 @@ func NewService(repos *repository.Repository) *Service {
 		Authorization: NewAuthService(repos.Authorization),
 		BookItem:      NewBookService(repos.BookItem),
 		AuthorItem:    NewAuthorService(repos.AuthorItem),
+		UserItem:      NewUserService(repos.UserItem),
 	}
 }
