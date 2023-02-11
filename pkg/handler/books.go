@@ -16,7 +16,7 @@ func (h *Handler) getAllBooks(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, getAllBooksResponse{
-		Data: books,
+		Books: books,
 	})
 }
 

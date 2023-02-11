@@ -8,3 +8,13 @@ type User struct {
 	RoleID   int    `json:"role_id" db:"role_id"`
 	RoleName string `json:"role_name" db:"role_name"`
 }
+
+type UserUpdate struct {
+	Name     *string `json:"name" db:"name"`
+	Username *string `json:"username" db:"username"`
+	RoleID   *int    `json:"role_id" db:"role_id"`
+}
+
+func (u UserUpdate) Validate() bool {
+	return u.Name != nil || u.Username != nil || u.RoleID != nil
+}

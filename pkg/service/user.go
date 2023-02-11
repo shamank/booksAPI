@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/shamank/booksAPI/models"
 	"github.com/shamank/booksAPI/pkg/repository"
 )
@@ -20,25 +21,40 @@ func (s *UserService) GetUserById(userID int) (models.User, error) {
 	return s.repo.GetUserById(userID)
 }
 
-func (s *UserService) GetUsersBook(userID int) ([]models.Book, error) {
+func (s *UserService) GetUserBooks(userID int) ([]models.Book, error) {
 
-	return nil, nil
+	return s.repo.GetUserBooks(userID)
 }
 
 func (s *UserService) GetUserAuthors(userID int) ([]models.Author, error) {
 
-	return nil, nil
+	return s.repo.GetUserAuthors(userID)
 }
 
 func (s *UserService) NewUserBook(userID int, bookID int) error {
-	return nil
+
+	return s.repo.NewUserBook(userID, bookID)
 }
 
 func (s *UserService) NewUserAuthor(userID int, authorID int) error {
 
-	return nil
+	return s.repo.NewUserAuthor(userID, authorID)
 }
 
-func (s *UserService) UpdateUser(userID int) error {
-	return nil
+func (s *UserService) RemoveUserBook(userID int, bookID int) error {
+
+	return s.repo.RemoveUserBook(userID, bookID)
+}
+
+func (s *UserService) RemoveUserAuthor(userID int, authorID int) error {
+	return s.repo.RemoveUserAuthor(userID, authorID)
+}
+
+func (s *UserService) UpdateUser(userID int, input models.UserUpdate) error {
+
+	if ok := input.Validate(); !ok {
+		return errors.New("nothing to update")
+	}
+
+	return s.repo.UpdateUser(userID, input)
 }

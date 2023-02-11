@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -39,6 +40,25 @@ func (h *Handler) userIdentity(c *gin.Context) {
 
 	c.Set(userIdCtx, userId)
 	c.Set(userRoleCtx, userRoleId)
+}
+
+func (h *Handler) checkRightsForEdit(c *gin.Context) {
+	userID, roleID, err := getUser(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	userIDParam, err := strconv.Atoi(c.Param("user_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid param")
+		return
+	}
+
+	if userID != userIDParam && roleID == roleIDUser {
+		newErrorResponse(c, http.StatusForbidden, "you haven't access rights")
+		return
+	}
 }
 
 func (h *Handler) checkOnModerator(c *gin.Context) {

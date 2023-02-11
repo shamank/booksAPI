@@ -31,11 +31,16 @@ type BookItem interface {
 
 type UserItem interface {
 	GetUserById(userID int) (models.User, error)
-	GetUsersBook(userID int) ([]models.Book, error)
+	GetUserBooks(userID int) ([]models.Book, error)
 	GetUserAuthors(userID int) ([]models.Author, error)
+
 	NewUserBook(userID int, bookID int) error
 	NewUserAuthor(userID int, authorID int) error
-	UpdateUser(userID int) error
+
+	RemoveUserBook(userID int, bookID int) error
+	RemoveUserAuthor(userID int, bookID int) error
+
+	UpdateUser(userID int, input models.UserUpdate) error
 }
 
 type Repository struct {

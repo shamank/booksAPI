@@ -28,14 +28,17 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		users := api.Group("/users")
 		{
-			users.GET("/:id", h.getUserById)
-			users.GET("/:id/books", h.getUserBooks)
-			users.GET("/:id/authors", h.getUserAuthors)
+			users.GET("/:user_id", h.getUserById)
+			users.GET("/:user_id/books", h.getUserBooks)
+			users.GET("/:user_id/authors", h.getUserAuthors)
 
-			users.POST("/:id/books/:id", h.newUserBook)
-			users.POST("/:id/authors/:id", h.newUserAuthor)
+			users.POST("/:user_id/books/:book_id", h.checkRightsForEdit, h.newUserBook)
+			users.POST("/:user_id/authors/:author_id", h.checkRightsForEdit, h.newUserAuthor)
 
-			users.PUT("/:id", h.updateUser)
+			users.DELETE("/:user_id/books/:book_id", h.checkRightsForEdit, h.removeUserBook)
+			users.DELETE("/:user_id/authors/:author_id", h.checkRightsForEdit, h.removeUserAuthor)
+
+			users.PUT("/:user_id", h.checkRightsForEdit, h.updateUser)
 
 		}
 		books := api.Group("/books")

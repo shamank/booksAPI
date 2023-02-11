@@ -50,7 +50,7 @@ func (r *AuthorPostgres) CreateAuthor(author models.Author) (int, error) {
 		return 0, err
 	}
 
-	query := fmt.Sprintf("INSERT INTO %s VALUES ($1, $2) RETURNING id", authorsTable)
+	query := fmt.Sprintf("INSERT INTO %s(first_name, last_name) VALUES ($1, $2) RETURNING id", authorsTable)
 
 	row := r.db.QueryRow(query, author.FirstName, author.LastName)
 

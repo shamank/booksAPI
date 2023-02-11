@@ -7,11 +7,11 @@ import (
 )
 
 type getAllBooksResponse struct {
-	Data []models.Book `json:"data"`
+	Books []models.Book `json:"books"`
 }
 
 type getAllAuthorsResponse struct {
-	Data []models.Author `json:"data"`
+	Authors []models.Author `json:"authors"`
 }
 
 type statusResponse struct {

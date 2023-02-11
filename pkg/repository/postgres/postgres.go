@@ -13,7 +13,6 @@ const (
 	userAuthorTable = "user_author"
 	userBookTable   = "user_book"
 
-	bookAuthor = "book_author"
 	rolesTable = "usr_roles"
 )
 

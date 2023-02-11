@@ -6,12 +6,14 @@ type Book struct {
 	Description string   `json:"description" binding:"required"`
 	Rating      *float32 `json:"user_rating"`
 	Author      Author   `json:"author"`
+	AuthorID    int      `json:"author_id" db:"author_id"`
 }
 
 type Author struct {
 	ID        int    `json:"id"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
+	FirstName string `json:"first_name" db:"first_name"`
+	LastName  string `json:"last_name" db:"last_name"`
+	Birth     string `json:"birth" db:"birth"`
 }
 
 type BookAuthor struct {

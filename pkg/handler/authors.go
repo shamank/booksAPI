@@ -15,7 +15,7 @@ func (h *Handler) getAllAuthors(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, getAllAuthorsResponse{
-		Data: authors,
+		Authors: authors,
 	})
 }
 
