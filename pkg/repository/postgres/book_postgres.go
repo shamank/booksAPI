@@ -19,7 +19,9 @@ func (r *BookPostgres) GetAllBooks() ([]models.Book, error) {
 
 	var books []models.Book
 
-	query := fmt.Sprintf("SELECT * FROM %s", booksTable)
+	query := fmt.Sprintf(`SELECT bt.*, AVG(user_rating) as rating 
+								FROM %s bt INNER JOIN %s ubt ON bt.id = ubt.book_id
+								GROUP BY bt.id `, booksTable, userBookTable)
 
 	if err := r.db.Select(&books, query); err != nil {
 		return books, err
@@ -31,9 +33,15 @@ func (r *BookPostgres) GetAllBooks() ([]models.Book, error) {
 func (r *BookPostgres) GetBook(bookID int) (models.Book, error) {
 	var book models.Book
 
-	query := fmt.Sprintf(`SELECT *, ((SELECT AVG(user_rating)
-               from user_book WHERE book_id = $1 GROUP BY book_id)) as rating 
-				FROM %s WHERE id = $1`, booksTable)
+	query := fmt.Sprintf(`SELECT bt.*, AVG(user_rating) as rating 
+								FROM %s bt INNER JOIN %s ubt ON bt.id = ubt.book_id
+								WHERE bt.id = $1
+								GROUP BY bt.id `, booksTable, userBookTable)
+
+	//query := fmt.Sprintf(`SELECT *, ((SELECT AVG(user_rating)
+	//           from user_book WHERE book_id = $1 GROUP BY book_id)) as rating
+	//			FROM %s WHERE id = $1`, booksTable)
+
 	if err := r.db.Get(&book, query, bookID); err != nil {
 		return book, err
 	}
@@ -52,7 +60,7 @@ func (r *BookPostgres) CreateBook(book models.Book) (int, error) {
 	var id int
 
 	createBookQuery := fmt.Sprintf("INSERT INTO %s(title, description, author_id) VALUES($1, $2, $3) RETURNING id", booksTable)
-	row := tx.QueryRow(createBookQuery, book.Title, book.Description, book.Author.ID)
+	row := tx.QueryRow(createBookQuery, book.Title, book.Description, book.AuthorID)
 	if err := row.Scan(&id); err != nil {
 		tx.Rollback()
 		return 0, err

@@ -41,6 +41,11 @@ func (s *UserService) NewUserAuthor(userID int, authorID int) error {
 	return s.repo.NewUserAuthor(userID, authorID)
 }
 
+func (s *UserService) SetBookRating(userID int, bookID int, input models.UserScoreBook) error {
+
+	return s.repo.SetBookRating(userID, bookID, input)
+}
+
 func (s *UserService) RemoveUserBook(userID int, bookID int) error {
 
 	return s.repo.RemoveUserBook(userID, bookID)

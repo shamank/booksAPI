@@ -37,6 +37,8 @@ type UserItem interface {
 	NewUserBook(userID int, bookID int) error
 	NewUserAuthor(userID int, authorID int) error
 
+	SetBookRating(userID int, bookID int, input models.UserScoreBook) error
+
 	RemoveUserBook(userID int, bookID int) error
 	RemoveUserAuthor(userID int, bookID int) error
 

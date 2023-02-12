@@ -64,6 +64,34 @@ func (r *UserPostgres) NewUserBook(userID int, bookID int) error {
 	return nil
 }
 
+func (r *UserPostgres) SetBookRating(userID int, bookID int, input models.UserScoreBook) error {
+
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	if input.Rating != nil {
+		setValues = append(setValues, fmt.Sprintf("user_rating=$%d", argId))
+		args = append(args, *input.Rating)
+		argId++
+	}
+
+	if input.Is_favorite != nil {
+		setValues = append(setValues, fmt.Sprintf("is_favorite=$%d", argId))
+		args = append(args, *input.Is_favorite)
+		argId++
+	}
+
+	setQuery := strings.Join(setValues, ", ")
+
+	query := fmt.Sprintf("UPDATE %s SET %s WHERE user_id = $%d and book_id = $%d",
+		userBookTable, setQuery, argId, argId+1)
+	args = append(args, userID, bookID)
+
+	_, err := r.db.Exec(query, args...)
+	return err
+}
+
 func (r *UserPostgres) NewUserAuthor(userID int, authorID int) error {
 	query := fmt.Sprintf("INSERT INTO %s(user_id, author_id) VALUES ($1, $2)", userAuthorTable)
 

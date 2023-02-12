@@ -5,7 +5,6 @@ type Book struct {
 	Title       string   `json:"title" binding:"required"`
 	Description string   `json:"description" binding:"required"`
 	Rating      *float32 `json:"user_rating"`
-	Author      Author   `json:"author"`
 	AuthorID    int      `json:"author_id" db:"author_id"`
 }
 

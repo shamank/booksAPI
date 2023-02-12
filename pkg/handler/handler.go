@@ -33,6 +33,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			users.GET("/:user_id/authors", h.getUserAuthors)
 
 			users.POST("/:user_id/books/:book_id", h.checkRightsForEdit, h.newUserBook)
+
+			users.PUT("/:user_id/books/:book_id", h.checkRightsForEdit, h.setBookRating)
+
 			users.POST("/:user_id/authors/:author_id", h.checkRightsForEdit, h.newUserAuthor)
 
 			users.DELETE("/:user_id/books/:book_id", h.checkRightsForEdit, h.removeUserBook)

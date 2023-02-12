@@ -83,6 +83,36 @@ func (h *Handler) newUserBook(c *gin.Context) {
 	})
 }
 
+func (h *Handler) setBookRating(c *gin.Context) {
+	userID, err := strconv.Atoi(c.Param("user_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid key: user_id")
+		return
+	}
+
+	bookID, err := strconv.Atoi(c.Param("book_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid key: book_id")
+		return
+	}
+
+	var input models.UserScoreBook
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := h.services.SetBookRating(userID, bookID, input); err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, statusResponse{
+		Status: "ok",
+	})
+
+}
+
 func (h *Handler) newUserAuthor(c *gin.Context) {
 	userID, err := strconv.Atoi(c.Param("user_id"))
 	if err != nil {
@@ -116,6 +146,7 @@ func (h *Handler) updateUser(c *gin.Context) {
 	var input models.UserUpdate
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	err = h.services.UpdateUser(id, input)

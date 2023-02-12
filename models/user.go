@@ -18,3 +18,8 @@ type UserUpdate struct {
 func (u UserUpdate) Validate() bool {
 	return u.Name != nil || u.Username != nil || u.RoleID != nil
 }
+
+type UserScoreBook struct {
+	Rating      *float32 `json:"rating" db:"user_rating"`
+	Is_favorite *bool    `json:"is_favorite" db:"is_favorite"`
+}
