@@ -20,7 +20,7 @@ func (r *BookPostgres) GetAllBooks() ([]models.Book, error) {
 	var books []models.Book
 
 	query := fmt.Sprintf(`SELECT bt.*, AVG(user_rating) as rating 
-								FROM %s bt INNER JOIN %s ubt ON bt.id = ubt.book_id
+								FROM %s bt LEFT JOIN %s ubt ON bt.id = ubt.book_id
 								GROUP BY bt.id `, booksTable, userBookTable)
 
 	if err := r.db.Select(&books, query); err != nil {
