@@ -7,6 +7,17 @@ import (
 	"strconv"
 )
 
+//	@Summary		getAllBooks
+//	@Description	Get All Books from DB
+//	@Tags			book
+//	@Accept			json
+//	@Produce		json
+//	@Security		ApiKeyAuth
+//	@Success		200	{object}	getAllBooksResponse	"books"
+//	@Failure		400	{object}	errorResponse
+//	@Failure		404	{object}	errorResponse
+//	@Failure		500	{object}	errorResponse
+//	@Router			/api/books/ [get]
 func (h *Handler) getAllBooks(c *gin.Context) {
 
 	books, err := h.services.BookItem.GetAllBooks()
@@ -20,6 +31,18 @@ func (h *Handler) getAllBooks(c *gin.Context) {
 	})
 }
 
+//	@Summary		addBook
+//	@Description	Create new Book
+//	@Tags			book
+//	@Accept			json
+//	@Produce		json
+//	@Param			input	body	models.Book	true	"book input"
+//	@Security		ApiKeyAuth
+//	@Success		200	{int}		int	id	"new book id"
+//	@Failure		400	{object}	errorResponse
+//	@Failure		404	{object}	errorResponse
+//	@Failure		500	{object}	errorResponse
+//	@Router			/api/books/ [post]
 func (h *Handler) createBook(c *gin.Context) {
 
 	var inputBook models.Book
@@ -40,6 +63,18 @@ func (h *Handler) createBook(c *gin.Context) {
 	})
 }
 
+//	@Summary		getBook
+//	@Description	Get Book by ID
+//	@Tags			book
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path	int	true	"book id"
+//	@Security		ApiKeyAuth
+//	@Success		200	{object}	models.Book	"book"
+//	@Failure		400	{object}	errorResponse
+//	@Failure		404	{object}	errorResponse
+//	@Failure		500	{object}	errorResponse
+//	@Router			/api/books/{id} [get]
 func (h *Handler) getBook(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -56,6 +91,19 @@ func (h *Handler) getBook(c *gin.Context) {
 	c.JSON(http.StatusOK, book)
 }
 
+//	@Summary		updateBook
+//	@Description	Update Book by ID
+//	@Tags			book
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path	int						true	"book id"
+//	@Param			input	body	models.UpdateBookInput	true	"params to update"
+//	@Security		ApiKeyAuth
+//	@Success		200	{object}	statusResponse	"status response"
+//	@Failure		400	{object}	errorResponse
+//	@Failure		404	{object}	errorResponse
+//	@Failure		500	{object}	errorResponse
+//	@Router			/api/books/{id} [put]
 func (h *Handler) updateBook(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -81,6 +129,18 @@ func (h *Handler) updateBook(c *gin.Context) {
 
 }
 
+//	@Summary		deleteBook
+//	@Description	Delete Book by ID
+//	@Tags			book
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path	int	true	"book id"
+//	@Security		ApiKeyAuth
+//	@Success		200	{object}	statusResponse	"status response"
+//	@Failure		400	{object}	errorResponse
+//	@Failure		404	{object}	errorResponse
+//	@Failure		500	{object}	errorResponse
+//	@Router			/api/books/{id} [delete]
 func (h *Handler) deleteBook(c *gin.Context) {
 
 	id, err := strconv.Atoi(c.Param("id"))

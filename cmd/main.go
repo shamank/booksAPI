@@ -14,7 +14,20 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	_ "github.com/shamank/booksAPI/docs"
 )
+
+//	@title			Simple booksAPI
+//	@version		1.0
+//	@description	This is a sample server celler server.
+
+//	@host		localhost:8000
+//	@BasePath	/
+
+//	@securityDefinitions.apikey	ApiKeyAuth
+//	@in							header
+//	@name						Authorization
 
 func main() {
 	if err := initConfig(); err != nil {
